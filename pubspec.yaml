@@ -1,4 +1,4 @@
-name: health
+name: health-hs
 description: Wrapper for the iOS HealthKit and Android GoogleFit services.
 version: 1.0.0
 
