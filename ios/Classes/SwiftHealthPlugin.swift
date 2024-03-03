@@ -378,8 +378,9 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         let dateTo = Date(timeIntervalSince1970: endTime.doubleValue / 1000)
         
         let dataType = dataTypeLookUp(key: dataTypeKey)
+
         // ignore manual steps that pradicate1
-        let predicate= HKQuery.predicateForSamples(withStart: dateFrom, end: dateTo, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: dateFrom, end: dateTo, options: .strictStartDate)
         let predicateIgnoreManuelSteps = NSPredicate(format: "metadata.%K != YES", HKMetadataKeyWasUserEntered)
         let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [predicate, predicateIgnoreManuelSteps])
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
@@ -509,7 +510,7 @@ public class SwiftHealthPlugin: NSObject, FlutterPlugin {
         let dateTo = Date(timeIntervalSince1970: endTime.doubleValue / 1000)
         
         let sampleType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
-        let predicate= HKQuery.predicateForSamples(withStart: dateFrom, end: dateTo, options: .strictStartDate)
+        let predicate = HKQuery.predicateForSamples(withStart: dateFrom, end: dateTo, options: .strictStartDate)
         let predicateIgnoreManuelSteps = NSPredicate(format: "metadata.%K != YES", HKMetadataKeyWasUserEntered)
         let compoundPredicate = NSCompoundPredicate(type: .and, subpredicates: [predicate, predicateIgnoreManuelSteps])
 
