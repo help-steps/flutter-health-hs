@@ -1,8 +1,8 @@
 #import "HealthPlugin.h"
-#import <health/health-Swift.h>
+#import <health_hs/health_hs-Swift.h>
 
 @implementation HealthPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftHealthPlugin registerWithRegistrar:registrar];
+    [HealthPlugin registerWithRegistrar:registrar];
 }
 @end
