@@ -638,7 +638,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
   private fun errHandler(result: Result) = OnFailureListener { exception ->
     activity!!.runOnUiThread {
      // result.success(null)
-      mResult?.error("HS_HEALTH::ERROR", exception.message ?: "unknown error", exception.stackTrace.toString())
+      result?.error("HS_HEALTH::ERROR", exception.message ?: "unknown error", exception.stackTrace.toString())
     }
     Log.i("HS_HEALTH::ERROR", exception.message ?: "unknown error")
     Log.i("HS_HEALTH::ERROR", exception.stackTrace.toString())
