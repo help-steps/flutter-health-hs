@@ -3,6 +3,6 @@
 
 @implementation HealthPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    [HealthPlugin registerWithRegistrar:registrar];
+    [SwiftHealthPlugin registerWithRegistrar:registrar];
 }
 @end
