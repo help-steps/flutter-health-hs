@@ -80,6 +80,14 @@ class HealthFactory {
     return await _channel.invokeMethod('revokePermissions');
   }
 
+  /// Disable Google Fit obtained earlier.
+  ///
+  /// Not supported on iOS and method does nothing.
+  static Future<void> disableGoogleFit() async {
+    return await _channel.invokeMethod('disableGoogleFit');
+  }
+
+
   /// Requests permissions to access data types in Apple Health or Google Fit.
   ///
   /// Returns true if successful, false otherwise
