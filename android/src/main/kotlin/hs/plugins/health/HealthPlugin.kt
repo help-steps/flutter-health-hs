@@ -302,6 +302,72 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
     }
   }
 
+  /**
+   * Revokes Google Fit permissions for the app.
+   *
+   * @param call   The MethodCall object containing the method call arguments.
+   * @param result The Result object used to send the result back to the caller.
+   *
+   * If the activity is null, the function immediately returns with a failure result.
+   * Otherwise, it uses GoogleSignIn to revoke access and logs the outcome, returning
+   * success or failure accordingly.
+   */
+  private fun revokePermissions(call: MethodCall, result: Result) {
+    if (activity == null) {
+      result.success(false)
+      return
+    }
+
+    GoogleSignIn.getClient(activity!!, GoogleSignInOptions.DEFAULT_SIGN_IN).revokeAccess()
+      .addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          Log.d("HS_HEALTH", "Permissions revoked successfully!")
+          result.success(true)
+        } else {
+          Log.w("HS_HEALTH", "Failed to revoke permissions", task.exception)
+          result.success(false)
+        }
+      }
+  }
+
+  /**
+   * Disable Google Fit data recording.
+   *
+   * @param call   The MethodCall object containing the method call arguments.
+   * ct containing the method call arguments.
+   * @param result The Result object used to send the result back to the caller.
+   *
+   * This function disables Google Fit data recording. Be cautious with this operation as it deletes user data.
+   * If the activity is null, the function immediately returns with a failure result.
+   * Otherwise, it uses GoogleSignIn to disable Google Fit data recording and logs the outcome, returning
+   * success or failure accordingly.
+   */
+  private fun disableGoogleFit(call: MethodCall, result: Result) {
+    if (activity == null) {
+      result.success(false)
+      return
+    }
+
+    // This example clears Google Fit data. Be cautious with this operation as it deletes user data.
+    val fitnessOptions = FitnessOptions.builder()
+      .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+      .build()
+
+    val googleSignInAccount = GoogleSignIn.getAccountForExtension(activity!!.applicationContext, fitnessOptions)
+
+    Fitness.getConfigClient(activity!!.applicationContext, googleSignInAccount)
+      .disableFit()
+      .addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          Log.d("HS_HEALTH", "Google Fit disabled successfully!")
+          result.success(true)
+        } else {
+          Log.w("HS_HEALTH", "Failed to disable Google Fit", task.exception)
+          result.success(false)
+        }
+      }
+  }
+  
   private fun isIntField(dataSource: DataSource, unit: Field): Boolean {
     val dataPoint = DataPoint.builder(dataSource).build()
     val value = dataPoint.getValue(unit)
@@ -952,6 +1018,8 @@ class HealthPlugin(private var channel: MethodChannel? = null) : MethodCallHandl
       "writeData" -> writeData(call, result)
       "getTotalStepsInInterval" -> getTotalStepsInInterval(call, result)
       "hasPermissions" -> hasPermissions(call, result)
+      "revokePermissions" -> revokePermissions(call, result)
+      "disableGoogleFit" -> disableGoogleFit(call, result)
       "writeWorkoutData" -> writeWorkoutData(call, result)
       else -> result.notImplemented()
     }
